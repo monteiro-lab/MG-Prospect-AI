@@ -1,0 +1,58 @@
+# ==============================
+# Python / Backend
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+venv/
+env/
+.venv/
+.env
+*.db
+*.sqlite3
+
+# Alembic
+alembic/versions/__pycache__/
+
+# Temporary scripts
+clear_db.py
+check_emails.py
+
+# ==============================
+# Node / Frontend
+# ==============================
+node_modules/
+mg-prospect-frontend/dist/
+mg-prospect-frontend/.vite/
+*.tsbuildinfo
+
+# ==============================
+# IDE / Editor
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# OS / System
+# ==============================
+*.log
+*.tmp
+*.bak
+*.cache
+
+# ==============================
+# Docker (keep compose, ignore volumes)
+# ==============================
+docker-compose.override.yml
+postgres_data/
