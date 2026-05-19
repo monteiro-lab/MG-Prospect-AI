@@ -2,6 +2,7 @@ from typing import Dict, Any
 import os
 import re
 from app.core.config import settings
+from app.emails.logo_b64 import LOGO_BASE64
 
 def get_frontend_url():
     return os.getenv("FRONTEND_URL", "http://localhost:5173")
@@ -41,6 +42,7 @@ def render_email_template(template_content: str, lead_data: Dict[str, Any]) -> s
 def format_email_html(rendered_body: str, public_token: str) -> str:
     """
     Envolve o texto renderizado em um HTML premium estruturado com as cores da Mendonça Galvão.
+    Inclui a logo real da empresa no header.
     Branco/off-white no corpo, preto/grafite nos textos, e detalhes dourados.
     """
     # Converter as quebras de linha em parágrafos se não for HTML
@@ -80,13 +82,13 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
                 background-color: #1A202C;
             }}
             .header img {{
-                max-width: 150px;
+                max-width: 180px;
                 height: auto;
             }}
             .content {{
                 padding: 40px 30px;
                 font-size: 16px;
-                line-height: 1.6;
+                line-height: 1.7;
                 color: #4A5568;
             }}
             .content h1 {{
@@ -111,6 +113,11 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
                 font-weight: bold;
                 font-size: 16px;
             }}
+            .divider {{
+                height: 1px;
+                background: linear-gradient(to right, transparent, #D4AF37, transparent);
+                margin: 24px 0;
+            }}
             .footer {{
                 background-color: #F1F5F9;
                 padding: 24px 30px;
@@ -127,9 +134,7 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
     <body>
         <div class="container">
             <div class="header">
-                <!-- Usar uma URL real para o logo em produção -->
-                <div style="color: #D4AF37; font-size: 24px; font-weight: bold; letter-spacing: 1px;">MENDONÇA GALVÃO</div>
-                <div style="color: #A0AEC0; font-size: 12px; letter-spacing: 2px;">CONTADORES ASSOCIADOS</div>
+                <img src="{LOGO_BASE64}" alt="Mendonça Galvão Contadores Associados" style="max-width: 180px; height: auto;" />
             </div>
             <div class="content">
                 {rendered_body}

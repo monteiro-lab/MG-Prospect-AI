@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { Mail, Plus, Save, FileText, Loader2, Code2, Eye, Monitor, Smartphone, Code } from 'lucide-react';
+import logoMendonca from '../assets/logo.png';
 
 export function Templates() {
     const [templates, setTemplates] = useState<any[]>([]);
@@ -12,30 +13,36 @@ export function Templates() {
 
     // Estados do formulário
     const [name, setName] = useState('Apresentação Contábil B2B Premium');
-    const [subject, setSubject] = useState('Sua empresa em {cidade} pode contar com uma contabilidade mais estratégica');
-    const [body, setBody] = useState(`Olá, equipe da {nome_empresa}.
+    const [subject, setSubject] = useState('{nome_empresa}, como anda a contabilidade por aí? 😊');
+    const [body, setBody] = useState(`Oi, tudo bem? 👋
 
-Somos a Mendonça Galvão Contadores Associados, escritório de contabilidade em Petrolina - PE, e ajudamos empresas a terem mais segurança fiscal, organização contábil e apoio estratégico para crescer com tranquilidade.
+Me chamo Arthur, sou da equipe da Mendonça Galvão — um escritório de contabilidade aqui de Petrolina, PE.
 
-Percebemos que sua empresa atua no segmento de {segmento} em {cidade}/{estado}, e acreditamos que uma contabilidade mais próxima e estratégica pode contribuir diretamente para a gestão do seu negócio.
+Estava pesquisando empresas de {segmento} aí em {cidade}/{estado} e encontrei a {nome_empresa}. Achei o trabalho de vocês bem interessante e pensei: "será que a parte contábil tá sendo bem cuidada por aí?"
 
-Nosso trabalho é apoiar empresas com:
-- Rotinas contábeis e fiscais
-- Organização tributária
-- Acompanhamento empresarial
-- Regularidade documental
-- Apoio para tomada de decisão
+A gente sabe que lidar com burocracia, imposto, nota fiscal e tudo mais não é a parte mais empolgante de ter um negócio, né? 😅 É exatamente por isso que a gente existe — pra cuidar de toda essa parte pra você, enquanto você foca no que realmente importa: fazer sua empresa crescer.
 
-Se fizer sentido para sua empresa, será um prazer apresentar melhor nossas soluções.
+Algumas coisas que a gente resolve no dia a dia:
+• Abertura e regularização de empresas
+• Gestão fiscal e tributária (sem dor de cabeça!)
+• Folha de pagamento e obrigações trabalhistas
+• Planejamento pra pagar menos impostos, de forma legal
+• Suporte próximo — você fala com gente de verdade, não com robô
+
+<div class="divider"></div>
+
+Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a realidade da {nome_empresa} e ver como a gente pode ajudar. Sem compromisso, sem pressão — só uma conversa.
 
 <div class="cta-container">
-    <a href="{link_formulario_interesse}" class="cta-button">Tenho interesse em uma conversa</a>
+    <a href="{link_formulario_interesse}" class="cta-button">Quero conversar com a equipe ☕</a>
 </div>
 
-<p style="text-align: center; margin-top: 30px;">
-    <a href="{link_instagram}" style="color: #D4AF37; margin-right: 15px;">Conhecer nosso Instagram</a> | 
-    <a href="{link_whatsapp}" style="color: #D4AF37; margin-left: 15px;">Falar com a equipe</a>
-</p>`);
+<p style="text-align: center; margin-top: 30px; font-size: 14px; color: #718096;">
+    <a href="{link_instagram}" style="color: #D4AF37; margin-right: 15px;">📸 Nosso Instagram</a> | 
+    <a href="{link_whatsapp}" style="color: #D4AF37; margin-left: 15px;">💬 Chamar no WhatsApp</a>
+</p>
+
+<p style="font-size: 14px; color: #718096;">Um abraço,<br><strong style="color: #2D3748;">Arthur Monteiro</strong><br>Mendonça Galvão Contadores Associados</p>`);
 
     const availableVariables = [
         '{nome_empresa}', '{cidade}', '{estado}', '{segmento}', 
@@ -111,9 +118,11 @@ Se fizer sentido para sua empresa, será um prazer apresentar melhor nossas solu
                     body { margin: 0; padding: 0; background-color: #F8F9FA; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #2D3748; }
                     .container { max-width: 600px; margin: 40px auto; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid #D4AF37; }
                     .header { text-align: center; padding: 30px 20px; background-color: #1A202C; }
-                    .content { padding: 40px 30px; font-size: 16px; line-height: 1.6; color: #4A5568; }
+                    .header img { max-width: 180px; height: auto; }
+                    .content { padding: 40px 30px; font-size: 16px; line-height: 1.7; color: #4A5568; }
                     .cta-container { text-align: center; margin: 30px 0; }
                     .cta-button { display: inline-block; background-color: #D4AF37; color: #1A202C !important; text-decoration: none; padding: 14px 28px; border-radius: 4px; font-weight: bold; font-size: 16px; }
+                    .divider { height: 1px; background: linear-gradient(to right, transparent, #D4AF37, transparent); margin: 24px 0; }
                     .footer { background-color: #F1F5F9; padding: 24px 30px; text-align: center; font-size: 12px; color: #718096; }
                     .footer a { color: #D4AF37; text-decoration: none; }
                 </style>
@@ -121,8 +130,7 @@ Se fizer sentido para sua empresa, será um prazer apresentar melhor nossas solu
             <body>
                 <div class="container">
                     <div class="header">
-                        <div style="color: #D4AF37; font-size: 24px; font-weight: bold; letter-spacing: 1px;">MENDONÇA GALVÃO</div>
-                        <div style="color: #A0AEC0; font-size: 12px; letter-spacing: 2px;">CONTADORES ASSOCIADOS</div>
+                        <img src="${logoMendonca}" alt="Mendonça Galvão Contadores Associados" style="max-width: 180px; height: auto;" />
                     </div>
                     <div class="content">
                         ${content}
