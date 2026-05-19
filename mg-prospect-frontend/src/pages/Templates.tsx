@@ -86,11 +86,8 @@ Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a real
     // Helper to generate the preview HTML
     const getPreviewHtml = () => {
         let content = body;
-        if (!content.includes('<p>') && !content.includes('<br>')) {
-            content = content.split('\\n\\n').join('<br><br>');
-            content = content.replace(/\\n/g, '<br>');
-        }
 
+        // Substituir variáveis mockadas
         const mockedData: Record<string, string> = {
             '{nome_empresa}': 'Farmácia Extra Popular',
             '{cidade}': 'Petrolina',
@@ -106,8 +103,47 @@ Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a real
         };
 
         for (const [key, value] of Object.entries(mockedData)) {
-            content = content.replace(new RegExp(key, 'g'), value);
+            content = content.replace(new RegExp(key.replace(/[{}]/g, '\\$&'), 'g'), value);
         }
+
+        // Normalizar line endings
+        content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+        // Processar o conteúdo: separar blocos HTML existentes de texto puro
+        // Dividir por blocos HTML (div, p, a com style, etc.) preservando-os
+        const htmlBlockRegex = /(<div[\s\S]*?<\/div>|<p[\s\S]*?<\/p>)/gi;
+        const parts = content.split(htmlBlockRegex);
+
+        const processedParts = parts.map(part => {
+            // Se é um bloco HTML, preservar como está
+            if (part.match(/^<(div|p)\s/i)) {
+                return part;
+            }
+            // Se é texto puro, converter \n\n em parágrafos e \n em <br>
+            const paragraphs = part.split('\n\n').filter(p => p.trim());
+            if (paragraphs.length === 0) return '';
+
+            return paragraphs.map(para => {
+                // Detectar se é uma lista de bullet points
+                const lines = para.split('\n');
+                const bulletLines = lines.filter(l => l.trim().startsWith('•'));
+
+                if (bulletLines.length > 1) {
+                    // É uma lista — separar título (se houver) dos itens
+                    const titleLines = lines.filter(l => !l.trim().startsWith('•') && l.trim());
+                    const items = bulletLines.map(l => `<li>${l.trim().substring(1).trim()}</li>`).join('');
+                    const title = titleLines.length > 0 
+                        ? `<p>${titleLines.map(l => l.trim()).join('<br>')}</p>` 
+                        : '';
+                    return `${title}<ul>${items}</ul>`;
+                }
+
+                // Parágrafo normal
+                return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+            }).join('');
+        });
+
+        content = processedParts.join('');
 
         return `
             <!DOCTYPE html>
@@ -115,16 +151,21 @@ Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a real
             <head>
                 <meta charset="UTF-8">
                 <style>
-                    body { margin: 0; padding: 0; background-color: #F8F9FA; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #2D3748; }
+                    body { margin: 0; padding: 0; background-color: #F8F9FA; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #2D3748; -webkit-font-smoothing: antialiased; }
                     .container { max-width: 600px; margin: 40px auto; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid #D4AF37; }
                     .header { text-align: center; padding: 30px 20px; background-color: #1A202C; }
                     .header img { max-width: 180px; height: auto; }
-                    .content { padding: 40px 30px; font-size: 16px; line-height: 1.7; color: #4A5568; }
+                    .content { padding: 40px 35px; font-size: 15px; line-height: 1.8; color: #4A5568; text-align: justify; }
+                    .content p { margin: 0 0 18px 0; }
+                    .content ul { margin: 8px 0 20px 0; padding-left: 0; list-style: none; }
+                    .content ul li { padding: 6px 0 6px 24px; position: relative; color: #4A5568; }
+                    .content ul li::before { content: ''; position: absolute; left: 4px; top: 14px; width: 8px; height: 8px; background: #D4AF37; border-radius: 50%; }
                     .cta-container { text-align: center; margin: 30px 0; }
-                    .cta-button { display: inline-block; background-color: #D4AF37; color: #1A202C !important; text-decoration: none; padding: 14px 28px; border-radius: 4px; font-weight: bold; font-size: 16px; }
-                    .divider { height: 1px; background: linear-gradient(to right, transparent, #D4AF37, transparent); margin: 24px 0; }
+                    .cta-button { display: inline-block; background-color: #D4AF37; color: #1A202C !important; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 0.3px; }
+                    .divider { height: 1px; background: linear-gradient(to right, transparent, #D4AF37, transparent); margin: 28px 0; }
                     .footer { background-color: #F1F5F9; padding: 24px 30px; text-align: center; font-size: 12px; color: #718096; }
                     .footer a { color: #D4AF37; text-decoration: none; }
+                    .footer p { margin: 6px 0; }
                 </style>
             </head>
             <body>
@@ -227,8 +268,8 @@ Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a real
                             />
                         </div>
                     ) : (
-                        <div className="bg-[#E2E8F0] rounded-xl p-8 flex items-center justify-center min-h-[600px]">
-                            <div className={`bg-white shadow-2xl transition-all duration-300 overflow-hidden ${viewMode === 'preview-mobile' ? 'w-[375px] h-[667px] rounded-3xl border-[12px] border-gray-900' : 'w-[800px] h-full rounded-md border border-gray-300'}`}>
+                        <div className="bg-[#E2E8F0] rounded-xl p-8 flex items-center justify-center min-h-[700px]">
+                            <div className={`bg-white shadow-2xl transition-all duration-300 overflow-hidden ${viewMode === 'preview-mobile' ? 'w-[375px] h-[667px] rounded-3xl border-[12px] border-gray-900' : 'w-[800px] h-[650px] rounded-md border border-gray-300'}`}>
                                 <iframe
                                     srcDoc={getPreviewHtml()}
                                     className="w-full h-full bg-white border-0"

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { LeadDetails } from '../components/LeadDetails';
-import { Search, Filter, Users, MapPin, Star, ArrowUpDown, Zap, ChevronLeft, ChevronRight, List as ListIcon, Radar, Globe2, Building2, Scale, ShoppingCart, Stethoscope, Briefcase, Laptop, Home, Utensils, Car, Coffee, Pill } from 'lucide-react';
+import { CustomSelect } from '../components/CustomSelect';
+import { Search, Filter, Users, MapPin, Star, ArrowUpDown, Zap, ChevronLeft, ChevronRight, List as ListIcon, Radar, Globe2, Building2, Scale, ShoppingCart, Stethoscope, Briefcase, Laptop, Home, Utensils, Car, Coffee, Pill, Circle, UserCheck, MessageSquare, ThumbsUp, ThumbsDown, Target } from 'lucide-react';
 import Map, { Marker, NavigationControl } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -125,6 +126,26 @@ export function Leads() {
         setSelectedLead(updatedLead);
     };
 
+    const statusOptions = [
+        { value: '', label: 'Todos os status', icon: <Filter className="w-4 h-4" /> },
+        { value: 'NOVO', label: 'Novo', icon: <Circle className="w-4 h-4" />, badge: 'Novo', badgeClass: 'bg-mg-info/15 text-mg-info' },
+        { value: 'PROSPECTADO', label: 'Prospectado', icon: <UserCheck className="w-4 h-4" />, badge: 'Ativo', badgeClass: 'bg-purple-400/15 text-purple-400' },
+        { value: 'EM NEGOCIAÇÃO', label: 'Em Negociação', icon: <MessageSquare className="w-4 h-4" />, badge: 'Quente', badgeClass: 'bg-mg-gold/15 text-mg-gold' },
+        { value: 'CLIENTE', label: 'Cliente', icon: <ThumbsUp className="w-4 h-4" />, badge: 'Fechado', badgeClass: 'bg-mg-success/15 text-mg-success' },
+        { value: 'NÃO INTERESSADO', label: 'Não Interessado', icon: <ThumbsDown className="w-4 h-4" />, badge: 'Perdido', badgeClass: 'bg-mg-error/15 text-mg-error' },
+    ];
+
+    const campaignOptions = [
+        { value: '', label: 'Todas as Campanhas', icon: <Target className="w-4 h-4" /> },
+        ...campaigns.map(camp => ({
+            value: String(camp.id),
+            label: camp.name,
+            icon: <Target className="w-4 h-4" />,
+            badge: camp.status === 'CONCLUIDO' ? '✓' : camp.status === 'RODANDO' ? '⟳' : undefined,
+            badgeClass: camp.status === 'CONCLUIDO' ? 'bg-mg-success/15 text-mg-success' : camp.status === 'RODANDO' ? 'bg-mg-gold/15 text-mg-gold' : undefined,
+        })),
+    ];
+
     return (
         <div className="space-y-6 animate-fade-in flex flex-col h-full">
             {/* Filters Bar */}
@@ -139,34 +160,23 @@ export function Leads() {
                         className="input-premium pl-10"
                     />
                 </div>
-                <div className="relative">
-                    <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-mg-muted" />
-                    <select
-                        value={statusFilter}
-                        onChange={e => setStatusFilter(e.target.value)}
-                        className="input-premium pl-10 pr-8 appearance-none cursor-pointer min-w-[180px]"
-                    >
-                        <option value="">Todos os status</option>
-                        <option value="NOVO">Novo</option>
-                        <option value="PROSPECTADO">Prospectado</option>
-                        <option value="EM NEGOCIAÇÃO">Em Negociação</option>
-                        <option value="CLIENTE">Cliente</option>
-                        <option value="NÃO INTERESSADO">Não Interessado</option>
-                    </select>
-                </div>
-                <div className="relative">
-                    <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-mg-muted" />
-                    <select
-                        value={campaignFilter}
-                        onChange={e => setCampaignFilter(e.target.value)}
-                        className="input-premium pl-10 pr-8 appearance-none cursor-pointer min-w-[180px] max-w-[200px] truncate"
-                    >
-                        <option value="">Todas as Campanhas</option>
-                        {campaigns.map(camp => (
-                            <option key={camp.id} value={camp.id}>{camp.name}</option>
-                        ))}
-                    </select>
-                </div>
+                <CustomSelect
+                    options={statusOptions}
+                    value={statusFilter}
+                    onChange={setStatusFilter}
+                    placeholder="Todos os status"
+                    icon={<Filter className="w-4 h-4" />}
+                    minWidth="200px"
+                />
+                <CustomSelect
+                    options={campaignOptions}
+                    value={campaignFilter}
+                    onChange={setCampaignFilter}
+                    placeholder="Todas as Campanhas"
+                    icon={<Target className="w-4 h-4" />}
+                    searchable={true}
+                    minWidth="220px"
+                />
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">

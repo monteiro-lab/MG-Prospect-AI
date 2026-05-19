@@ -45,10 +45,40 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
     Inclui a logo real da empresa no header.
     Branco/off-white no corpo, preto/grafite nos textos, e detalhes dourados.
     """
-    # Converter as quebras de linha em parágrafos se não for HTML
-    if "<p>" not in rendered_body and "<br>" not in rendered_body:
-        rendered_body = "<br><br>".join(rendered_body.split("\n\n"))
-        rendered_body = rendered_body.replace("\n", "<br>")
+    # Processar o conteúdo: separar blocos HTML existentes de texto puro
+    rendered_body = rendered_body.replace("\r\n", "\n").replace("\r", "\n")
+
+    html_block_pattern = re.compile(r'(<div[\s\S]*?</div>|<p[\s\S]*?</p>)', re.IGNORECASE)
+    parts = html_block_pattern.split(rendered_body)
+
+    processed_parts = []
+    for part in parts:
+        # Se é um bloco HTML, preservar como está
+        if re.match(r'^<(div|p)\s', part, re.IGNORECASE):
+            processed_parts.append(part)
+            continue
+
+        # Se é texto puro, converter \n\n em parágrafos e \n em <br>
+        paragraphs = [p for p in part.split("\n\n") if p.strip()]
+        if not paragraphs:
+            continue
+
+        for para in paragraphs:
+            lines = para.split("\n")
+            bullet_lines = [l for l in lines if l.strip().startswith("•")]
+
+            if len(bullet_lines) > 1:
+                # É uma lista — separar título dos itens
+                title_lines = [l for l in lines if not l.strip().startswith("•") and l.strip()]
+                items = "".join(f"<li>{l.strip()[1:].strip()}</li>" for l in bullet_lines)
+                if title_lines:
+                    processed_parts.append(f"<p>{'<br>'.join(l.strip() for l in title_lines)}</p>")
+                processed_parts.append(f"<ul>{items}</ul>")
+            else:
+                # Parágrafo normal
+                processed_parts.append(f"<p>{para.replace(chr(10), '<br>')}</p>")
+
+    rendered_body = "".join(processed_parts)
 
     unsubscribe_url = f"{settings.FRONTEND_URL}/unsubscribe/{public_token}" if hasattr(settings, 'FRONTEND_URL') else f"http://localhost:5173/unsubscribe/{public_token}"
 
@@ -66,6 +96,7 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
                 background-color: #F8F9FA;
                 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 color: #2D3748;
+                -webkit-font-smoothing: antialiased;
             }}
             .container {{
                 max-width: 600px;
@@ -86,18 +117,32 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
                 height: auto;
             }}
             .content {{
-                padding: 40px 30px;
-                font-size: 16px;
-                line-height: 1.7;
+                padding: 40px 35px;
+                font-size: 15px;
+                line-height: 1.8;
                 color: #4A5568;
-            }}
-            .content h1 {{
-                color: #1A202C;
-                font-size: 22px;
-                margin-bottom: 20px;
+                text-align: justify;
             }}
             .content p {{
-                margin-bottom: 16px;
+                margin: 0 0 18px 0;
+            }}
+            .content ul {{
+                margin: 8px 0 20px 0;
+                padding-left: 24px;
+                list-style: none;
+            }}
+            .content ul li {{
+                padding: 6px 0;
+                position: relative;
+            }}
+            .content ul li::before {{
+                content: '\\2022';
+                color: #D4AF37;
+                font-weight: bold;
+                font-size: 18px;
+                position: absolute;
+                left: -18px;
+                top: 4px;
             }}
             .cta-container {{
                 text-align: center;
@@ -108,15 +153,16 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
                 background-color: #D4AF37;
                 color: #1A202C !important;
                 text-decoration: none;
-                padding: 14px 28px;
-                border-radius: 4px;
+                padding: 14px 32px;
+                border-radius: 6px;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 15px;
+                letter-spacing: 0.3px;
             }}
             .divider {{
                 height: 1px;
                 background: linear-gradient(to right, transparent, #D4AF37, transparent);
-                margin: 24px 0;
+                margin: 28px 0;
             }}
             .footer {{
                 background-color: #F1F5F9;
@@ -128,6 +174,9 @@ def format_email_html(rendered_body: str, public_token: str) -> str:
             .footer a {{
                 color: #D4AF37;
                 text-decoration: none;
+            }}
+            .footer p {{
+                margin: 6px 0;
             }}
         </style>
     </head>
