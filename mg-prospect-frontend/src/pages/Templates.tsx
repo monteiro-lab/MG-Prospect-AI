@@ -13,36 +13,37 @@ export function Templates() {
 
     // Estados do formulário
     const [name, setName] = useState('Apresentação Contábil B2B Premium');
-    const [subject, setSubject] = useState('{nome_empresa}, como anda a contabilidade por aí? 😊');
-    const [body, setBody] = useState(`Oi, tudo bem? 👋
+    const [subject, setSubject] = useState('Uma ideia para a {nome_empresa}');
+    const [body, setBody] = useState(`Olá, tudo bem?
 
-Me chamo Arthur, sou da equipe da Mendonça Galvão — um escritório de contabilidade aqui de Petrolina, PE.
+Somos a Mendonça Galvão Contadores Associados, um escritório de contabilidade com sede em Petrolina, PE.
 
-Estava pesquisando empresas de {segmento} aí em {cidade}/{estado} e encontrei a {nome_empresa}. Achei o trabalho de vocês bem interessante e pensei: "será que a parte contábil tá sendo bem cuidada por aí?"
+Encontramos a {nome_empresa} enquanto pesquisávamos empresas de {segmento} na região de {cidade}/{estado}. Nos chamou atenção o trabalho de vocês, e gostaríamos de saber como está a parte contábil e fiscal do negócio.
 
-A gente sabe que lidar com burocracia, imposto, nota fiscal e tudo mais não é a parte mais empolgante de ter um negócio, né? 😅 É exatamente por isso que a gente existe — pra cuidar de toda essa parte pra você, enquanto você foca no que realmente importa: fazer sua empresa crescer.
+Sabemos que, no dia a dia, a prioridade de quem empreende é fazer o negócio crescer. Questões como tributos, obrigações acessórias e folha de pagamento acabam ficando em segundo plano, e é justamente aí que entra o nosso trabalho.
 
-Algumas coisas que a gente resolve no dia a dia:
+Cuidamos de toda a estrutura contábil para que você possa focar no que realmente importa. Algumas das frentes em que atuamos:
+
 • Abertura e regularização de empresas
-• Gestão fiscal e tributária (sem dor de cabeça!)
+• Gestão fiscal e tributária completa
 • Folha de pagamento e obrigações trabalhistas
-• Planejamento pra pagar menos impostos, de forma legal
-• Suporte próximo — você fala com gente de verdade, não com robô
+• Planejamento tributário para redução legal de impostos
+• Atendimento próximo, com pessoas reais dedicadas à sua empresa
 
 <div class="divider"></div>
 
-Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a realidade da {nome_empresa} e ver como a gente pode ajudar. Sem compromisso, sem pressão — só uma conversa.
+Gostaríamos de propor uma conversa rápida, sem compromisso, para entender melhor a realidade da {nome_empresa} e avaliar se faz sentido trabalharmos juntos.
 
 <div class="cta-container">
-    <a href="{link_formulario_interesse}" class="cta-button">Quero conversar com a equipe ☕</a>
+    <a href="{link_formulario_interesse}" class="cta-button">Agendar uma conversa</a>
 </div>
 
 <p style="text-align: center; margin-top: 30px; font-size: 14px; color: #718096;">
-    <a href="{link_instagram}" style="color: #D4AF37; margin-right: 15px;">📸 Nosso Instagram</a> | 
-    <a href="{link_whatsapp}" style="color: #D4AF37; margin-left: 15px;">💬 Chamar no WhatsApp</a>
+    <a href="{link_instagram}" style="color: #D4AF37; margin-right: 15px;">Nosso Instagram</a> | 
+    <a href="{link_whatsapp}" style="color: #D4AF37; margin-left: 15px;">Fale pelo WhatsApp</a>
 </p>
 
-<p style="font-size: 14px; color: #718096;">Um abraço,<br><strong style="color: #2D3748;">Arthur Monteiro</strong><br>Mendonça Galvão Contadores Associados</p>`);
+<p style="font-size: 14px; color: #718096;">Atenciosamente,<br><strong style="color: #2D3748;">Equipe Mendonça Galvão</strong><br>Contadores Associados</p>`);
 
     const availableVariables = [
         '{nome_empresa}', '{cidade}', '{estado}', '{segmento}', 
