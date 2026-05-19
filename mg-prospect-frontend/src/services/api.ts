@@ -12,3 +12,15 @@ api.interceptors.request.use((config) => {
     }
     return config;
 });
+
+// Intercepta respostas com erro 401 e desloga o usuário
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('mg_token');
+            window.location.href = '/';
+        }
+        return Promise.reject(error);
+    }
+);

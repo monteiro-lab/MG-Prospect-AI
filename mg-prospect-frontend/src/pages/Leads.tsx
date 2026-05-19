@@ -58,7 +58,7 @@ export function Leads() {
 
     // Fetch campaigns for the filter dropdown
     useEffect(() => {
-        api.get('/campaigns')
+        api.get('/campaigns/')
             .then(res => setCampaigns(res.data))
             .catch(console.error);
     }, []);

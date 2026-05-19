@@ -39,7 +39,7 @@ export function Dashboard() {
             try {
                 const [leadsRes, campaignsRes, qualifiedRes, interestedRes] = await Promise.all([
                     api.get('/leads?page_size=5'),
-                    api.get('/campaigns'),
+                    api.get('/campaigns/'),
                     api.get('/leads?min_score=40&page_size=1'),
                     api.get('/leads?status=INTERESSADO&page_size=1')
                 ]);

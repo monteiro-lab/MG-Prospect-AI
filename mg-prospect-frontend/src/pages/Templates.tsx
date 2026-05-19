@@ -56,7 +56,7 @@ Se tiver 5 minutinhos, adoraria bater um papo rápido pra entender melhor a real
 
     const fetchTemplates = async () => {
         try {
-            const response = await api.get('/emails');
+            const response = await api.get('/emails/');
             setTemplates(response.data);
         } catch (error) {
             console.error("Erro ao buscar templates:", error);
