@@ -1,17 +1,4 @@
-# Stage 1: Build
-FROM node:18-alpine AS build
-
-WORKDIR /app
-
-COPY package*.json ./
-ENV NODE_ENV=development
-RUN npm ci
-
-COPY . .
-
-RUN npm run build
-
-# Stage 2: Serve
+# Use Nginx to serve the pre-built files
 FROM nginx:alpine
 
 # Remove a config default do Nginx
@@ -20,8 +7,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copia a config customizada
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copia o build do React
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copia o build pre-compilado do React
+COPY dist /usr/share/nginx/html
 
 EXPOSE 80
 
