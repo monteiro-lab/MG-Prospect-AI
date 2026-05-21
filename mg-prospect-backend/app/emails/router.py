@@ -6,7 +6,7 @@ from typing import List
 from app.core.database import get_db
 from app.emails.models import EmailTemplate
 from app.emails.schemas import EmailTemplateCreate, EmailTemplateResponse
-from app.auth.dependencies import get_current_user
+from app.auth.router import get_current_user
 
 router = APIRouter()
 
