@@ -7,7 +7,6 @@ __pycache__/
 *.so
 *.egg-info/
 *.egg
-dist/
 build/
 venv/
 env/
@@ -27,8 +26,6 @@ check_emails.py
 # Node / Frontend
 # ==============================
 node_modules/
-mg-prospect-frontend/dist/
-mg-prospect-frontend/.vite/
 *.tsbuildinfo
 
 # ==============================
