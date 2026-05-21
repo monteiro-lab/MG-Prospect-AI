@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { Users, Target, Mail, Award, TrendingUp, Activity, ArrowUpRight, Zap } from 'lucide-react';
+import { Users, Target, Award, TrendingUp, Activity, ArrowUpRight, Zap } from 'lucide-react';
 
 interface DashboardStats {
     totalLeads: number;

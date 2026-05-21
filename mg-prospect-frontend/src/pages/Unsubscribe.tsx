@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { MailX, Loader2, CheckCircle2 } from 'lucide-react';
 import logoMendonca from '../assets/logo.png';
 
 export function Unsubscribe() {
     const { token } = useParams();
-    const navigate = useNavigate();
     
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 

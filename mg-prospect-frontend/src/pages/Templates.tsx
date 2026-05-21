@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { Mail, Plus, Save, FileText, Loader2, Code2, Eye, Monitor, Smartphone, Code } from 'lucide-react';
+import { Mail, Save, FileText, Loader2, Code2, Monitor, Smartphone, Code } from 'lucide-react';
 import logoMendonca from '../assets/logo.png';
 
 export function Templates() {
