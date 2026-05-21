@@ -9,15 +9,7 @@ export function Unsubscribe() {
     
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
-    useEffect(() => {
-        if (token) {
-            handleUnsubscribe();
-        } else {
-            setStatus('error');
-        }
-    }, [token]);
-
-    const handleUnsubscribe = async () => {
+    async function handleUnsubscribe() {
         try {
             await api.post(`/public/unsubscribe/${token}`);
             setStatus('success');
@@ -25,7 +17,15 @@ export function Unsubscribe() {
             console.error('Erro ao processar unsubscribe', error);
             setStatus('error');
         }
-    };
+    }
+
+    useEffect(() => {
+        if (token) {
+            handleUnsubscribe();
+        } else {
+            setStatus('error');
+        }
+    }, [token]);
 
     return (
         <div className="min-h-screen bg-[#0A0C0E] py-12 px-4 relative flex items-center justify-center">

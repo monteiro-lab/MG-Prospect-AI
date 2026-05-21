@@ -51,11 +51,7 @@ Gostaríamos de propor uma conversa rápida, sem compromisso, para entender melh
         '{link_formulario_interesse}', '{link_whatsapp}', '{unsubscribe_url}'
     ];
 
-    useEffect(() => {
-        fetchTemplates();
-    }, []);
-
-    const fetchTemplates = async () => {
+    async function fetchTemplates() {
         try {
             const response = await api.get('/emails/');
             setTemplates(response.data);
@@ -64,7 +60,11 @@ Gostaríamos de propor uma conversa rápida, sem compromisso, para entender melh
         } finally {
             setLoading(false);
         }
-    };
+    }
+
+    useEffect(() => {
+        fetchTemplates();
+    }, []);
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
