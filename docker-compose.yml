@@ -40,8 +40,6 @@ services:
   frontend:
     build: ./mg-prospect-frontend
     restart: always
-    ports:
-      - "${FRONTEND_PORT:-80}:80"
     depends_on:
       - api
 
