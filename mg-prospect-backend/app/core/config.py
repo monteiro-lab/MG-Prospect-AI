@@ -8,8 +8,17 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 # 1 dia
     DATABASE_URL: str
     
-    # Adicionamos a variável aqui para o Pydantic reconhecer:
+    # Google Places
     GOOGLE_PLACES_API_KEY: Optional[str] = None
+
+    # Brevo (E-mail transacional)
+    BREVO_API_KEY: Optional[str] = None
+    BREVO_FROM_EMAIL: str = "contato@mendoncagalvao.com.br"
+
+    # Frontend
+    FRONTEND_URL: str = "http://localhost:5173"
+
+    # n8n
     N8N_WEBHOOK_LEAD_INTEREST_URL: Optional[str] = None
 
     class Config:

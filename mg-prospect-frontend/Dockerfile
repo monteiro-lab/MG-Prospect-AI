@@ -1,0 +1,30 @@
+# Stage 1: Build
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+ARG VITE_API_URL=/api/v1
+ENV VITE_API_URL=$VITE_API_URL
+
+RUN npm run build
+
+# Stage 2: Serve
+FROM nginx:alpine
+
+# Remove a config default do Nginx
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copia a config customizada
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copia o build do React
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

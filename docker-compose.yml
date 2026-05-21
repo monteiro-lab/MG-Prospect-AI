@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mg_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mg_password}
+      POSTGRES_DB: ${POSTGRES_DB:-mg_prospect}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mg_user} -d ${POSTGRES_DB:-mg_prospect}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./mg-prospect-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-mg_user}:${POSTGRES_PASSWORD:-mg_password}@db:5432/${POSTGRES_DB:-mg_prospect}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
+      - GOOGLE_PLACES_API_KEY=${GOOGLE_PLACES_API_KEY}
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - BREVO_FROM_EMAIL=${BREVO_FROM_EMAIL:-contato@mendoncagalvao.com.br}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - N8N_WEBHOOK_LEAD_INTEREST_URL=${N8N_WEBHOOK_LEAD_INTEREST_URL}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  frontend:
+    build: ./mg-prospect-frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:

@@ -30,14 +30,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-import os
-
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+from app.core.config import settings
 
 # CORS para o React
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL], # Estrito para a URL do frontend em produção
+    allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
