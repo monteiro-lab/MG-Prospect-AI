@@ -6,18 +6,23 @@ from typing import List
 from app.core.database import get_db
 from app.emails.models import EmailTemplate
 from app.emails.schemas import EmailTemplateCreate, EmailTemplateResponse
+from app.auth.dependencies import get_current_user
 
 router = APIRouter()
 
-@router.post("/", response_model=EmailTemplateResponse)
-async def create_template(template_in: EmailTemplateCreate, db: AsyncSession = Depends(get_db)):
+@router.post("", response_model=EmailTemplateResponse)
+async def create_template(
+    template_in: EmailTemplateCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
     new_template = EmailTemplate(**template_in.model_dump())
     db.add(new_template)
     await db.commit()
     await db.refresh(new_template)
     return new_template
 
-@router.get("/", response_model=List[EmailTemplateResponse])
+@router.get("", response_model=List[EmailTemplateResponse])
 async def list_templates(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(EmailTemplate))
     return result.scalars().all()

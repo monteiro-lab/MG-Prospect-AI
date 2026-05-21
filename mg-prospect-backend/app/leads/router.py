@@ -1,23 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from typing import List
+from typing import List, Optional
 from datetime import datetime
+import secrets
 
 from app.core.database import get_db
 from app.core.config import settings
 from app.auth.router import get_current_user
 from app.leads.models import Lead
 from app.leads.schemas import LeadCreate, LeadResponse
+from app.leads.schemas import LeadCreate, LeadResponse, PaginatedLeadResponse
 from app.leads.service import calculate_lead_score
 from app.integrations.google_places import fetch_place_details
 from pydantic import BaseModel
+from sqlalchemy import func, or_, desc, asc
+from typing import Optional
 
 router = APIRouter()
 
-@router.post("/", response_model=LeadResponse)
+@router.post("", response_model=LeadResponse)
 async def create_lead(lead_in: LeadCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
-    import secrets
     new_lead = Lead(**lead_in.model_dump(), public_token=secrets.token_urlsafe(16))
     
     # Calcular score no momento da criação
@@ -28,11 +31,7 @@ async def create_lead(lead_in: LeadCreate, db: AsyncSession = Depends(get_db), c
     await db.refresh(new_lead)
     return new_lead
 
-from app.leads.schemas import LeadCreate, LeadResponse, PaginatedLeadResponse
-from sqlalchemy import func, or_, desc, asc
-from typing import Optional
-
-@router.get("/", response_model=PaginatedLeadResponse)
+@router.get("", response_model=PaginatedLeadResponse)
 async def list_leads(
     page: int = 1,
     page_size: int = 50,

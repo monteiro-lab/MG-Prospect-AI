@@ -11,7 +11,7 @@ from app.campaigns.service import process_campaign_discovery
 
 router = APIRouter()
 
-@router.post("/", response_model=CampaignResponse)
+@router.post("", response_model=CampaignResponse)
 async def create_campaign(
     campaign_in: CampaignCreate, 
     background_tasks: BackgroundTasks,
@@ -29,7 +29,7 @@ async def create_campaign(
     
     return new_campaign
 
-@router.get("/", response_model=List[CampaignResponse])
+@router.get("", response_model=List[CampaignResponse])
 async def list_campaigns(
     skip: int = 0, 
     limit: int = 50, 
