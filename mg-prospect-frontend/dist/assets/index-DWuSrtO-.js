@@ -16719,7 +16719,7 @@ function Dashboard() {
 			try {
 				const [leadsRes, campaignsRes, qualifiedRes, interestedRes] = await Promise.all([
 					api.get("/leads?page_size=5"),
-					api.get("/campaigns/"),
+					api.get("/campaigns"),
 					api.get("/leads?min_score=40&page_size=1"),
 					api.get("/leads?status=INTERESSADO&page_size=1")
 				]);
@@ -17450,7 +17450,7 @@ function _Map(props, ref) {
 		const mapLib = props.mapLib;
 		let isMounted = true;
 		let maplibre;
-		Promise.resolve(mapLib || __vitePreload(() => import("./maplibre-gl-BUip2iQ0.js").then((m) => /* @__PURE__ */ __toESM(m.default, 1)), [])).then((module) => {
+		Promise.resolve(mapLib || __vitePreload(() => import("./maplibre-gl-BD-u1L-u.js").then((m) => /* @__PURE__ */ __toESM(m.default, 1)), [])).then((module) => {
 			if (!isMounted) return;
 			if (!module) throw new Error("Invalid mapLib");
 			const mapboxgl = "Map" in module ? module : module.default;
@@ -17777,7 +17777,7 @@ function LeadDetails({ lead: rawLead, onClose, onLeadUpdated }) {
 		setTimeout(() => setToast(null), 4e3);
 	};
 	(0, import_react.useEffect)(() => {
-		if (showEmailModal && templates.length === 0) api.get("/emails/").then((res) => setTemplates(res.data)).catch(console.error);
+		if (showEmailModal && templates.length === 0) api.get("/emails").then((res) => setTemplates(res.data)).catch(console.error);
 	}, [showEmailModal, templates.length]);
 	(0, import_react.useEffect)(() => {
 		if (selectedTemplateId && rawLead) {
@@ -18402,7 +18402,7 @@ function Leads() {
 		}
 	};
 	(0, import_react.useEffect)(() => {
-		api.get("/campaigns/").then((res) => setCampaigns(res.data)).catch(console.error);
+		api.get("/campaigns").then((res) => setCampaigns(res.data)).catch(console.error);
 	}, []);
 	(0, import_react.useEffect)(() => {
 		const timer = setTimeout(() => {
@@ -19342,7 +19342,7 @@ Gostaríamos de propor uma conversa rápida, sem compromisso, para entender melh
 	];
 	async function fetchTemplates() {
 		try {
-			setTemplates((await api.get("/emails/")).data);
+			setTemplates((await api.get("/emails")).data);
 		} catch (error) {
 			console.error("Erro ao buscar templates:", error);
 		} finally {

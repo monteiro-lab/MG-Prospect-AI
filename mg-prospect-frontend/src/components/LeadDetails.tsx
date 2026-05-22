@@ -34,7 +34,7 @@ export function LeadDetails({ lead: rawLead, onClose, onLeadUpdated }: LeadDetai
     // Fetch templates when modal opens
     useEffect(() => {
         if (showEmailModal && templates.length === 0) {
-            api.get('/emails/').then(res => setTemplates(res.data)).catch(console.error);
+            api.get('/emails').then(res => setTemplates(res.data)).catch(console.error);
         }
     }, [showEmailModal, templates.length]);
 

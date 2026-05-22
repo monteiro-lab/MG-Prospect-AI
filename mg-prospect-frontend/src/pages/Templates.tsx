@@ -53,7 +53,7 @@ Gostaríamos de propor uma conversa rápida, sem compromisso, para entender melh
 
     async function fetchTemplates() {
         try {
-            const response = await api.get('/emails/');
+            const response = await api.get('/emails');
             setTemplates(response.data);
         } catch (error) {
             console.error("Erro ao buscar templates:", error);
